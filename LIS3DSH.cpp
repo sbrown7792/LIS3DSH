@@ -81,6 +81,23 @@ void LIS3DSH::enableDefault(void)
 	writeReg(LIS3DSH_CTRL_REG6, 0x10);
 }
 
+void LIS3DSH::enableFast(void)
+{
+	// Normal power mode, all axes enabled, 1600 Hz ODR
+	writeReg(LIS3DSH_CTRL_REG4, 0x9C);
+}
+
+void LIS3DSH::enableWakeup(void)
+{
+	writeReg(LIS3DSH_CTRL_REG1, 0x01);
+	writeReg(LIS3DSH_CTRL_REG3, 0x48);
+	writeReg(LIS3DSH_THRS1_1, 0x45);
+	writeReg(LIS3DSH_ST1_1, 0x05);
+	writeReg(LIS3DSH_ST1_2, 0x11);
+	writeReg(LIS3DSH_MASK1_B, 0xFC);
+	writeReg(LIS3DSH_MASK1_A, 0xFC);
+	writeReg(LIS3DSH_SETT1, 0x01);
+}
 
 // Reads the 3 accelerometer channels
 void LIS3DSH::readAccel(int16_t *pX, int16_t *pY, int16_t *pZ)
@@ -125,6 +142,105 @@ void LIS3DSH::readAccel(int16_t *pX, int16_t *pY, int16_t *pZ)
 
 		*pX = (int16_t)(xha << 8 | xla);
 		*pY = (int16_t)(yha << 8 | yla);
+		*pZ = (int16_t)(zha << 8 | zla);
+	}
+}
+
+// Reads the X channel
+void LIS3DSH::readAccelX(int16_t *pX)
+{
+	uint8_t xla;
+	uint8_t xha;
+
+	if((NULL != pX))
+	{
+		Wire.beginTransmission(I2CAddr);
+
+#ifdef _MULTI_REGISTER_ACCEL_READ
+		// assert the MSB of the address to get the accelerometer
+		// to do slave-transmit subaddress updating.
+		Wire.write(LIS3DSH_OUT_X_L | (1 << 7));
+		Wire.endTransmission();
+		Wire.requestFrom(I2CAddr, 2);
+
+		while (Wire.available() < 2);
+
+		xla = Wire.read();
+		xha = Wire.read();
+
+#else
+
+		xla = readReg(LIS3DSH_OUT_X_L);
+		xha = readReg(LIS3DSH_OUT_X_H);
+
+#endif	//MULTI_REGISTER_ACCEL_READ
+
+		*pX = (int16_t)(xha << 8 | xla);
+	}
+}
+
+// Reads the Y channel
+void LIS3DSH::readAccelY(int16_t *pY)
+{
+	uint8_t yla;
+	uint8_t yha;
+
+	if((NULL != pY))
+	{
+		Wire.beginTransmission(I2CAddr);
+
+#ifdef _MULTI_REGISTER_ACCEL_READ
+		// assert the MSB of the address to get the accelerometer
+		// to do slave-transmit subaddress updating.
+		Wire.write(LIS3DSH_OUT_Y_L | (1 << 7));
+		Wire.endTransmission();
+		Wire.requestFrom(I2CAddr, 2);
+
+		while (Wire.available() < 2);
+
+		yla = Wire.read();
+		yha = Wire.read();
+
+#else
+
+		yla = readReg(LIS3DSH_OUT_Y_L);
+		yha = readReg(LIS3DSH_OUT_Y_H);
+
+#endif	//MULTI_REGISTER_ACCEL_READ
+
+		*pY = (int16_t)(yha << 8 | yla);
+	}
+}
+
+// Reads the Z channel
+void LIS3DSH::readAccelZ(int16_t *pZ)
+{
+	uint8_t zla;
+	uint8_t zha;
+
+	if((NULL != pZ))
+	{
+		Wire.beginTransmission(I2CAddr);
+
+#ifdef _MULTI_REGISTER_ACCEL_READ
+		// assert the MSB of the address to get the accelerometer
+		// to do slave-transmit subaddress updating.
+		Wire.write(LIS3DSH_OUT_Z_L | (1 << 7));
+		Wire.endTransmission();
+		Wire.requestFrom(I2CAddr, 2);
+
+		while (Wire.available() < 2);
+
+		zla = Wire.read();
+		zha = Wire.read();
+
+#else
+
+		zla = readReg(LIS3DSH_OUT_Z_L);
+		zha = readReg(LIS3DSH_OUT_Z_H);
+
+#endif	//MULTI_REGISTER_ACCEL_READ
+
 		*pZ = (int16_t)(zha << 8 | zla);
 	}
 }
