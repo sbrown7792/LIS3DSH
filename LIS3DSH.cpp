@@ -87,15 +87,22 @@ void LIS3DSH::enableFast(void)
 	writeReg(LIS3DSH_CTRL_REG4, 0x9C);
 }
 
-void LIS3DSH::enableWakeup(void)
+void LIS3DSH::enableWakeup(sensitivity sens_value)
 {
+	//enable SM1
 	writeReg(LIS3DSH_CTRL_REG1, 0x01);
+	//enable interrupt active-low, and enable INT1/DRDY signal
 	writeReg(LIS3DSH_CTRL_REG3, 0x48);
-	writeReg(LIS3DSH_THRS1_1, 0x45);
+	
+	//set sensitivity of wakeup
+	writeReg(LIS3DSH_THRS1_1, sens_value);
+	
 	writeReg(LIS3DSH_ST1_1, 0x05);
 	writeReg(LIS3DSH_ST1_2, 0x11);
+	//enable XYZ but disable "V"
 	writeReg(LIS3DSH_MASK1_B, 0xFC);
 	writeReg(LIS3DSH_MASK1_A, 0xFC);
+	//set SITR to 1 //TODO why?
 	writeReg(LIS3DSH_SETT1, 0x01);
 }
 

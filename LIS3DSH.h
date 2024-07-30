@@ -28,16 +28,25 @@
 #define LIS3DSH_ST1_1			0x40
 #define LIS3DSH_ST1_2			0x41
 
+
 class LIS3DSH
 {
 	public:
+		//TODO figure out good values here. medium seems less sensitive than low?
+		enum sensitivity {
+			LIS3DSH_LOW = 0xA5,
+			LIS3DSH_MEDIUM = 0x70,
+			LIS3DSH_HIGH = 0x45
+		};
 		LIS3DSH();
+		
 
 	public:
 		uint8_t setSELState(uint8_t SELState);
 		void enableDefault(void);
 		void enableFast(void);
-		void enableWakeup(void);
+		//void enableWakeup(void);
+		void enableWakeup(sensitivity sens_value = LIS3DSH_HIGH);
 		void readAccel(int16_t *pX, int16_t *pY, int16_t *pZ);
 		void readAccelX(int16_t *pX);
 		void readAccelY(int16_t *pY);
