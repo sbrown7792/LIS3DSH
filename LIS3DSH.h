@@ -33,6 +33,8 @@ class LIS3DSH
 {
 	public:
 		//TODO figure out good values here. medium seems less sensitive than low?
+		// think these might be two's complement? so 2g == 0x7F and anything higher means a negative acceleration
+		// todo, try 0xBA for a "negative 0x45 high acceleration"
 		enum sensitivity {
 			LIS3DSH_LOW = 0xA5,
 			LIS3DSH_MEDIUM = 0x70,
