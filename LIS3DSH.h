@@ -36,8 +36,8 @@ class LIS3DSH
 		// think these might be two's complement? so 2g == 0x7F and anything higher means a negative acceleration
 		// todo, try 0xBA for a "negative 0x45 high acceleration"
 		enum sensitivity {
-			LIS3DSH_LOW = 0xA5,
-			LIS3DSH_MEDIUM = 0x70,
+			LIS3DSH_LOW = 0x7E,
+			LIS3DSH_MEDIUM = 0x5A,
 			LIS3DSH_HIGH = 0x45
 		};
 		LIS3DSH();
